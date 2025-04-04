@@ -216,6 +216,7 @@ int number_of_moves(struct game_state start) {
 	//printf("test 3\n");
 
 	free_list(l);
+	free_list(tracker);
 
 	return game.num_steps; 
 }
