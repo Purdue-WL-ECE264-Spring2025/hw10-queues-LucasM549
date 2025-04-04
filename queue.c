@@ -33,16 +33,44 @@ struct game_state copyGame(struct game_state game)
 	newGame.num_steps = game.num_steps;
 
 	return newGame;
-} 
+}
+
+int searchList(struct linked_list list, size_t value)
+{
+	struct list_node * testNode;
+	
+	if(list.head == NULL)
+	{
+		return 0;
+	}
+	
+	testNode = list.head;
+
+	do
+	{
+		if(testNode->value == value)
+		{
+			return 1;
+		}
+		testNode = testNode->next;
+	}
+	while(testNode != NULL);
+
+	return 0;
+}
 
 int number_of_moves(struct game_state start) {
 
+	//return  -1;
 //struct queue q;
 	struct linked_list l;
+
+	struct linked_list tracker;
 
 	//return 3;
 
 	l.head = NULL;
+	tracker.head = NULL;
 	
 	insert_at_tail(&l, serialize(start));
 
@@ -56,12 +84,13 @@ int number_of_moves(struct game_state start) {
 	int col = 0;
 	int row = 0;
 	int flag = 0;
+	size_t serial;
 
 	do
 	{
-		/*
+		/*	
 		int k = 0;
-
+		
 		printf("[ ");
   	for (struct list_node *cur = l.head; cur != NULL; cur = cur->next) {
     	
@@ -122,28 +151,58 @@ int number_of_moves(struct game_state start) {
 			{
 				newGame = copyGame(game);
 				move_up(&newGame);
-				insert_at_tail(&l, serialize(newGame));
+
+				serial = serialize(newGame);
+
+				if(!searchList(tracker, serial))
+				{
+					insert_at_tail(&l, serial);
+					insert_at_tail(&tracker, serial);
+				}
 			}
 
 			if((int) game.empty_row != 0)
 			{
 				newGame = copyGame(game);
 				move_down(&newGame);
-				insert_at_tail(&l, serialize(newGame));
+				
+				serial = serialize(newGame);
+
+				if(!searchList(tracker, serial))
+				{
+					insert_at_tail(&l, serial);
+					insert_at_tail(&tracker, serial);
+				}
+
 			}
 
 			if((int) game.empty_col != 3)
 			{
 				newGame = copyGame(game);
 				move_left(&newGame);
-				insert_at_tail(&l, serialize(newGame));
+				
+				serial = serialize(newGame);
+
+				if(!searchList(tracker, serial))
+				{
+					insert_at_tail(&l, serial);
+					insert_at_tail(&tracker, serial);
+				}
+	
 			}
 
 			if((int) game.empty_col != 0)
 			{
 				newGame = copyGame(game);
 				move_right(&newGame);
-				insert_at_tail(&l, serialize(newGame));
+				
+				serial = serialize(newGame);
+
+				if(!searchList(tracker, serial))
+				{
+					insert_at_tail(&l, serial);
+					insert_at_tail(&tracker, serial);
+				}
 			}
 
 		}
@@ -155,6 +214,8 @@ int number_of_moves(struct game_state start) {
 	while(!flag);
 
 	//printf("test 3\n");
+
+	free_list(l);
 
 	return game.num_steps; 
 }
