@@ -25,11 +25,20 @@ void insert_at_head(struct linked_list *list, size_t value)
 }
 
 void insert_at_tail(struct linked_list *list, size_t value) {
-
+	
 	struct list_node * node = new_node(value);
-
+		
 	struct list_node * testNode = list->head;
 
+	if(testNode == NULL)
+	{
+		list->head = node;
+		//printf("%ld", node->value);
+		return;
+	}
+
+	
+	
 	while(testNode->next != NULL)
 	{
 		testNode = testNode->next;
